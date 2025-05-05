@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter password to check</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ed7879;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+    }
+    .container {
+      background: #0c62b7;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+    }
+    input[type="password"],
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .options {
+      margin: 1rem 0;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #ed7879;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0c62b7;
+    }
+    .output {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+      user-select: all;
+      word-break: break-word;
+    }
+    .strength {
+      text-align: center;
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+    .weak { color: #ed7879 }
+    .medium { color: #f3b6bb; }
+    .strong { color: #0c62b7; }
+    hr {
+      margin: 1.5rem 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 CHECK & CREATE PASSWORD</h2>
+
+    <!-- PHẦN 1: Kiểm tra mật khẩu người dùng nhập -->
+    <label>Enter password to check:</label>
+    <input type="password" id="userPassword" placeholder="Enter your password" oninput="checkUserPassword()">
+    <div class="strength" id="userStrength"></div>
+
+    <hr>
+
+    <!-- PHẦN 2: Tạo mật khẩu ngẫu nhiên -->
+    <div class="options">
+      <label>Password length:</label>
+      <input type="number" id="length" min="4" max="50" value="12">
+      <label><input type="checkbox" id="uppercase" checked> Capital letters (A-Z)</label>
+      <label><input type="checkbox" id="lowercase" checked> Lowercase (a-z)</label>
+      <label><input type="checkbox" id="numbers" checked> Numbers (0-9)</label>
+      <label><input type="checkbox" id="symbols"> Special characters (!@#$...)</label>
+    </div>
+
+    <button onclick="generatePassword()">Create Password</button>
+    <div class="output" id="generatedPassword" onclick="copyToClipboard()">Click to copy</div>
+    <div class="strength" id="generatedStrength"></div>
+  </div>
+
+  <script>
+    function evaluateStrength(password) {
+      let score = 0;
+      if (password.length >= 12) score++;
+      if (/[a-z]/.test(password)) score++;
+      if (/[A-Z]/.test(password)) score++;
+      if (/\d/.test(password)) score++;
+      if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+      if (score <= 2) return { label: "Weak password", class: "weak" };
+      else if (score <= 4) return { label: "Average Password", class: "medium" };
+      else return { label: "Strong password", class: "strong" };
+    }
+
+    function checkUserPassword() {
+      const pwd = document.getElementById('userPassword').value;
+      const result = evaluateStrength(pwd);
+      const el = document.getElementById('userStrength');
+      if (pwd === "") {
+        el.textContent = "";
+        el.className = "strength";
+      } else {
+        el.textContent = result.label;
+        el.className = "strength " + result.class;
+      }
+    }
+
+    function generatePassword() {
+      const length = document.getElementById('length').value;
+      const useUpper = document.getElementById('uppercase').checked;
+      const useLower = document.getElementById('lowercase').checked;
+      const useNumbers = document.getElementById('numbers').checked;
+      const useSymbols = document.getElementById('symbols').checked;
+
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const numbers = "0123456789";
+      const symbols = "!@#$%^&*()_+=-[]{}|;:,.<>?";
+
+      let charset = "";
+      if (useUpper) charset += upper;
+      if (useLower) charset += lower;
+      if (useNumbers) charset += numbers;
+      if (useSymbols) charset += symbols;
+
+      if (charset === "") {
+        document.getElementById('generatedPassword').textContent = "Vui lòng chọn ít nhất 1 tùy chọn.";
+        document.getElementById('generatedStrength').textContent = "";
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+      }
+
+      document.getElementById('generatedPassword').textContent = password;
+      const strength = evaluateStrength(password);
+      const el = document.getElementById('generatedStrength');
+      el.textContent = strength.label;
+      el.className = "strength " + strength.class;
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('generatedPassword').textContent;
+      if (text && !text.startsWith("Vui lòng")) {
+        navigator.clipboard.writeText(text);
+        alert("Đã sao chép mật khẩu vào clipboard!");
+      }
+    }
+  </script>
+</body>
+</html>
