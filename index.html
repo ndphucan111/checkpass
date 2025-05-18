@@ -3,74 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <title>CHECK & CREATE PASSWORD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #ed7879;
       display: flex;
+      align-items: flex-start;
       justify-content: center;
-      align-items: center;
       min-height: 100vh;
-      color: white;
-    }
-    .container {
-      background: #0c62b7;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      max-width: 500px;
       width: 100%;
+      padding: 50px 10px;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      position: relative;
     }
+
+      body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("background.jpg") no-repeat center center/cover;
+            background-position: center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .container {
+      width: 400px;
+      border-radius: 15px;
+      padding: 40px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      transition: all 0.3s ease;
+    }
+
+.container:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    }
+
     h2 {
       text-align: center;
       margin-bottom: 1rem;
+      font-size: 1.8rem;
+      color: #ffffff;
     }
+
     label {
       display: block;
-      margin: 0.5rem 0 0.2rem;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: 500;
     }
+
     input[type="password"],
     input[type="text"],
     input[type="number"] {
       width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 10px;
     }
-    .options {
-      margin: 1rem 0;
+
+    input::placeholder {
+      color: #ffe3e9;
     }
+
+    .options label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+
     button {
       width: 100%;
-      padding: 0.7rem;
-      background: #ed7879;
-      color: white;
+      padding: 12px;
+      background: #ff6f91;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
       font-size: 1rem;
+      margin-top: 10px;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
+
     button:hover {
-      background: #0c62b7;
+      background: #fcbf49;
+      color: #333;
     }
+
     .output {
       margin-top: 1rem;
       font-size: 1.1rem;
       text-align: center;
       user-select: all;
       word-break: break-word;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
     }
+
     .strength {
       text-align: center;
       margin-top: 0.5rem;
       font-weight: bold;
     }
-    .weak { color: #ed7879 }
-    .medium { color: #f3b6bb; }
-    .strong { color: #0c62b7; }
+
+    .weak { color: #ff6f91; }
+    .medium { color: #fcbf49; }
+    .strong { color: #67d5ff; }
+
     hr {
       margin: 1.5rem 0;
       border: none;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
@@ -80,7 +147,7 @@
 
     <!-- PHẦN 1: Kiểm tra mật khẩu người dùng nhập -->
     <label>Enter password to check:</label>
-    <input type="password" id="userPassword" placeholder="Enter your password" oninput="checkUserPassword()">
+    <input type="password" id="userPassword" placeholder="Nhập mật khẩu" oninput="checkUserPassword()">
     <div class="strength" id="userStrength"></div>
 
     <hr>
